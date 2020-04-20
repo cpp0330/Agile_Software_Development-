@@ -36,15 +36,18 @@ describe('add todo', function () {
       expect(realText).to.eql('已完成');
     })
 
-    it('test showall', async function(){
-      await page.goto('http://localhost:8080/api/tasks');
-      await page.click('#a1',{delay:2000});
-      let h3 = await page.waitFor('#h3');
-      let realText = await page.evaluate(function(todoList){
-        return todoList.lastChild.textContent;
-      },todoList);
-      expect(realText).to.eql(h3);
-    })
+    it('render all item', async function(){
+      await page.goto('http://localhost:8080/html/add.jsp');
+      let todoList = await page.waitFor('#todoList');
+      const flag = await page.evaluate(function(todoList){
+        if(todoList.childNodes.item(0).textContent == 'new todo item 0' && todoList.childNodes.item(1).textContent == 'new todo item 1'){
+          return true;
+        }else{
+          return false;
+        }
+      }, todoList);
+      expect(flag).to.eql(true);
+  })
 
     it('test delete', async function(){
       await page.click('#deleteBtn',{delay:2000});
